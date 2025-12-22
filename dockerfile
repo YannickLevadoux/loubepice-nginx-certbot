@@ -1,7 +1,7 @@
-FROM jonasal/nginx-certbot:4.3.0-nginx1.25.2 AS builder
+FROM jonasal/nginx-certbot:6.0.1-nginx1.29.2 AS builder
 
-ENV NGINX_VERSION 1.25.2
-ENV HEADER_MORE_VERSION 0.33
+ENV NGINX_VERSION=1.29.2
+ENV HEADER_MORE_VERSION=0.33
 
 RUN apt-get update &&  apt-get install --no-install-recommends --no-install-suggests -y \
   gnupg1 \
@@ -13,7 +13,7 @@ RUN apt-get update &&  apt-get install --no-install-recommends --no-install-sugg
   curl \
   gnupg \
   wget \
-  libpcre3 libpcre3-dev \
+  libpcre2-8-0 libpcre2-dev \
   unzip \
   libghc-zlib-dev
 
@@ -26,7 +26,15 @@ RUN wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -O nginx.tar.
     ./configure --with-compat $CONF_ARGS --add-dynamic-module=/usr/src/headers-more-nginx-module-${HEADER_MORE_VERSION} && \
     make && make install
 
-FROM jonasal/nginx-certbot:4.3.0-nginx1.25.2
+FROM jonasal/nginx-certbot:6.0.1-nginx1.29.2
+
+RUN apt-get update && apt-get upgrade -y && apt-get clean
+
+RUN python3 -m pip install --no-cache-dir --upgrade \
+    pip \
+    filelock \
+    urllib3 \    
+    --break-system-packages
 
 COPY --from=builder /usr/local/nginx/modules/ngx_http_headers_more_filter_module.so /usr/lib/nginx/modules/ngx_http_headers_more_filter_module.so
 
