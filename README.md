@@ -9,14 +9,20 @@ ou droit de déploiement et ne contacte jamais la production.
 
 | Composant | Version | Vérification |
 |---|---:|---|
-| Image de base `jonasal/nginx-certbot` | `6.0.1-nginx1.29.2` (`linux/amd64`) | manifeste `sha256:47fc0fab81e22a7b2fd75157720b135b25f10b8edead929140e32653517fe2b4` |
-| Nginx | `1.29.2` | archive SHA-256 `5669e3c29d49bf7f6eb577275b86efe4504cf81af885c58a1ed7d2e7b8492437` |
-| headers-more | `0.34` | archive SHA-256 `0c0d2ced2ce895b3f45eb2b230cd90508ab2a773299f153de14a43e44c1209b3` |
-| Certbot | `5.1.0` | fourni par l'image de base figée |
+| Image de base `jonasal/nginx-certbot` | `6.2.0-nginx1.31.5` (`linux/amd64`) | manifeste `sha256:133f39cd8897f6987b56d1f6a182ec7ec4173490c10009a745a91dc94e0e9de4` |
+| Nginx | `1.31.5` | archive SHA-256 `e951607d534836624bd36b6b45a71dbfb055237deae3738da6bbf3270dada279` |
+| headers-more | `0.40` | archive SHA-256 `c14cb5e6c998590c209efbf77bd7637ce2cab02332e4192756a8af5b26ba4284` |
+| Certbot | `5.8.0` | fourni par l'image de base figée |
 | pip / filelock / urllib3 | `26.2.1` / `3.32.5` / `2.7.0` | wheels PyPI figés et vérifiés par SHA-256 |
 | Python | `3.13` | fourni par l'image de base et corrigé depuis le snapshot Debian figé |
 
-La construction utilise le snapshot Debian immuable du 20 octobre 2025 pour
+Le digest `sha256:21830c44b2eb57076eac1b025e9f68bc1af618c846d435863bb85d1818d5783b`
+affiché dans le lien Docker Hub de référence cible `linux/386`. Comme l'image
+de ce dépôt est publiée pour `linux/amd64`, elle utilise le manifeste
+`sha256:133f39cd8897f6987b56d1f6a182ec7ec4173490c10009a745a91dc94e0e9de4`
+du même tag amont.
+
+La construction utilise le snapshot Debian immuable du 24 août 2026 pour
 les seuls outils du stage de compilation, puis celui du 5 septembre 2026 pour
 reproduire les mises à jour de sécurité de l'image finale. Les outils, les
 archives et les caches de compilation ne sont pas copiés dans l'image finale.
@@ -78,10 +84,9 @@ restituée par le workflow.
 - le téléchargement Nginx passe de HTTP à HTTPS ;
 - le module est compilé comme module dynamique compatible, sans installer une
   seconde copie complète de Nginx ;
-- `headers-more` passe de `0.33` à `0.34`, première version officielle qui
-  corrige la compilation et la gestion des en-têtes avec Nginx 1.23 ou plus ;
-  `0.33` échoue à compiler contre le Nginx 1.29.2 déjà retenu par l'ancien
-  Dockerfile ;
+- l'image de base passe à `jonasal/nginx-certbot:6.2.0-nginx1.31.5` et reste
+  figée par le manifeste propre à `linux/amd64` ;
+- `headers-more` passe à `0.40` et est recompilé contre Nginx `1.31.5` ;
 - l'`apt-get upgrade` non figé est remplacé par les mises à jour du snapshot
   Debian immuable du 5 septembre 2026 ;
 - les mises à niveau `pip`, `filelock` et `urllib3` sont conservées mais leurs

@@ -14,6 +14,15 @@ trap cleanup EXIT
 
 docker run --rm --platform linux/amd64 --entrypoint nginx "$image_ref" -t
 
+nginx_version=$(docker run --rm --platform linux/amd64 --entrypoint nginx \
+  "$image_ref" -v 2>&1)
+certbot_version=$(docker run --rm --platform linux/amd64 --entrypoint certbot \
+  "$image_ref" --version 2>&1)
+test "$nginx_version" = 'nginx version: nginx/1.31.5'
+test "$certbot_version" = 'certbot 5.8.0'
+docker run --rm --platform linux/amd64 --entrypoint python3 \
+  "$image_ref" -m pip check
+
 docker run --rm --platform linux/amd64 --entrypoint sh "$image_ref" -c \
   'test -s /usr/lib/nginx/modules/ngx_http_headers_more_filter_module.so &&
    nginx -T 2>&1 | grep -Fq "load_module modules/ngx_http_headers_more_filter_module.so;"'
@@ -22,8 +31,18 @@ source_label=$(docker image inspect --format \
   '{{ index .Config.Labels "org.opencontainers.image.source" }}' "$image_ref")
 revision_label=$(docker image inspect --format \
   '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "$image_ref")
+version_label=$(docker image inspect --format \
+  '{{ index .Config.Labels "org.opencontainers.image.version" }}' "$image_ref")
+base_name_label=$(docker image inspect --format \
+  '{{ index .Config.Labels "org.opencontainers.image.base.name" }}' "$image_ref")
+base_digest_label=$(docker image inspect --format \
+  '{{ index .Config.Labels "org.opencontainers.image.base.digest" }}' "$image_ref")
 test "$source_label" = 'https://github.com/YannickLevadoux/loubepice-nginx-certbot'
 test -n "$revision_label"
+test "$version_label" = '1.2.0'
+test "$base_name_label" = 'docker.io/jonasal/nginx-certbot:6.2.0-nginx1.31.5'
+test "$base_digest_label" = \
+  'sha256:133f39cd8897f6987b56d1f6a182ec7ec4173490c10009a745a91dc94e0e9de4'
 
 openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
   -subj '/CN=localhost' \
@@ -55,4 +74,4 @@ done
 docker exec "$container_name" sh -c \
   'nginx -t -q && python3 -c "import ssl, urllib.request; urllib.request.urlopen('\''https://127.0.0.1/50x.html'\'', context=ssl._create_unverified_context(), timeout=5)"'
 
-echo 'nginx -t, headers-more, local HTTP response and expected healthcheck: OK'
+echo 'versions, labels, Python dependencies, nginx -t, headers-more, local HTTP response and expected healthcheck: OK'

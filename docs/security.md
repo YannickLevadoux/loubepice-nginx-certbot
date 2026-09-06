@@ -27,19 +27,21 @@ base mise à jour donne les occurrences suivantes dans l'image candidate :
 | Sévérité | Total | Correctif indiqué | Sans correctif indiqué |
 |---|---:|---:|---:|
 | Critique | 4 | 0 | 4 |
-| Haute | 84 | 18 | 66 |
-| Moyenne | 104 | 6 | 98 |
-| Faible | 101 | 2 | 99 |
+| Haute | 68 | 2 | 66 |
+| Moyenne | 99 | 1 | 98 |
+| Faible | 99 | 0 | 99 |
 | Inconnue | 34 | 0 | 34 |
 
 Les quatre occurrences critiques sans correctif concernent `perl-base`
 (`CVE-2026-13221`, `CVE-2026-42496`, `CVE-2026-8376`) et `libxml2`
-(`CVE-2026-6653`). Le snapshot de sécurité figé met déjà à jour 44 paquets de
-l'image de base et fait passer le total critique de 7 à 4 et le total haut de
-184 à 84. Les 18 occurrences hautes pour lesquelles Trivy indique un correctif
-restent dans des dépendances Python transitives de Certbot. Leur mise à niveau
-groupée n'est pas appliquée silencieusement dans cette migration, car elle
-change l'ensemble de dépendances fonctionnelles fourni par l'image de base.
+(`CVE-2026-6653`). La nouvelle image de base contient déjà les versions du
+snapshot de sécurité final : l'étape `apt-get upgrade` ne trouve donc aucun
+paquet supplémentaire à mettre à jour. Par rapport au précédent candidat, le
+total haut passe de 84 à 68 et le total moyen de 104 à 99. Les deux occurrences
+hautes pour lesquelles Trivy indique un correctif concernent `setuptools` et
+`msgpack`, dépendances Python transitives de Certbot. Leur mise à niveau groupée
+n'est pas appliquée silencieusement dans cette migration, car elle change
+l'ensemble de dépendances fonctionnelles fourni par l'image de base.
 
 Ce relevé est un instantané : les bases de vulnérabilités évoluent. Le rapport
 CI complet fait foi au moment de la revue et de la publication. Une correction
