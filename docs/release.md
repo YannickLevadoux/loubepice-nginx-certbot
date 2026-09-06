@@ -35,6 +35,6 @@ tag Git et le tag Docker existants ne sont jamais déplacés ou écrasés.
 
 ## Digest 1.2.0
 
-État : non publié.
+État : publié.
 
-Digest : à renseigner après la publication autorisée.
+Digest : yannick7fr/nginx-certbot-custom@sha256:93de185acd7fdf6d1591a868579cfdb64a5393b2276d2f8938c40b52b53c8fa3
