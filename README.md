@@ -16,12 +16,6 @@ ou droit de déploiement et ne contacte jamais la production.
 | pip / filelock / urllib3 | `26.2.1` / `3.32.5` / `2.7.0` | wheels PyPI figés et vérifiés par SHA-256 |
 | Python | `3.13` | fourni par l'image de base et corrigé depuis le snapshot Debian figé |
 
-Le digest `sha256:21830c44b2eb57076eac1b025e9f68bc1af618c846d435863bb85d1818d5783b`
-affiché dans le lien Docker Hub de référence cible `linux/386`. Comme l'image
-de ce dépôt est publiée pour `linux/amd64`, elle utilise le manifeste
-`sha256:133f39cd8897f6987b56d1f6a182ec7ec4173490c10009a745a91dc94e0e9de4`
-du même tag amont.
-
 La construction utilise le snapshot Debian immuable du 24 août 2026 pour
 les seuls outils du stage de compilation, puis celui du 5 septembre 2026 pour
 reproduire les mises à jour de sécurité de l'image finale. Les outils, les
@@ -73,9 +67,11 @@ Procédure détaillée : [docs/release.md](docs/release.md).
 
 ## Digest publié
 
-`1.2.0` n'est pas encore publiée. Après publication contrôlée, cette section
-doit contenir la référence `yannick7fr/nginx-certbot-custom@sha256:<digest>`
-restituée par le workflow.
+`1.2.0`  
+
+```
+yannick7fr/nginx-certbot-custom@sha256:93de185acd7fdf6d1591a868579cfdb64a5393b2276d2f8938c40b52b53c8fa3
+```
 
 ## Corrections strictement nécessaires apportées à l'ancien Dockerfile
 
