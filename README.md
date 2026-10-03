@@ -48,17 +48,23 @@ et les limites des scans.
 
 ## Version et publication
 
-La première version autonome est associée au tag Git immuable `v1.2.0` et à
-l'unique tag d'image :
+Chaque tag Git immuable au format `vX.Y.Z` déclenche la publication du tag
+Docker correspondant, sans le préfixe `v`. Par exemple, `v1.3.0` publie :
 
 ```text
-yannick7fr/nginx-certbot-custom:1.2.0
+yannick7fr/nginx-certbot-custom:1.3.0
 ```
 
-Aucun tag flottant, notamment `latest`, n'est produit. Le workflow de
-publication n'accepte que `v1.2.0`, refuse de continuer si la version existe
-déjà sur Docker Hub, teste l'image avant authentification, puis restitue son
-digest dans le résumé et un artefact GitHub Actions. Les secrets Actions requis
+Aucun tag flottant, notamment `latest`, n'est produit. Les tags de préversion
+et les versions avec des zéros initiaux sont refusés. Le workflow refuse de
+continuer si la version existe déjà sur Docker Hub, teste l'image avant
+authentification, puis restitue son digest dans le résumé et un artefact
+GitHub Actions. La version est aussi inscrite dans le label OCI de l'image.
+Les builds locaux et de pull request utilisent la version `dev` par défaut ;
+pour tester une version précise, passer `--build-arg IMAGE_VERSION=1.3.0` au
+build et `1.3.0` en deuxième argument à `tests/test-image.sh`.
+
+Les secrets Actions requis
 dans ce dépôt sont `DOCKERHUB_USERNAME` et `DOCKERHUB_TOKEN`, ce dernier étant
 un jeton Docker Hub limité en écriture au dépôt d'image concerné. Leurs valeurs
 ne doivent jamais être ajoutées aux sources ou aux arguments de construction.

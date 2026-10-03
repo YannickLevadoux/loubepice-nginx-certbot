@@ -16,15 +16,19 @@ Créer dans les secrets GitHub Actions du seul dépôt
 Ne jamais transmettre leurs valeurs dans une issue, une pull request, un
 fichier, un argument de build ou un journal.
 
-## Procédure 1.2.0
+## Procédure de publication
+
+Choisir une nouvelle version stable `X.Y.Z` (par exemple `1.3.0`). Le numéro
+est déduit du tag Git par la CI ; aucun fichier ne doit être modifié pour
+changer uniquement le numéro de publication.
 
 1. Faire valider humainement le commit exact à publier et tous ses contrôles.
-2. Confirmer que `yannick7fr/nginx-certbot-custom:1.2.0` n'existe pas.
-3. Créer une seule fois le tag Git annoté `v1.2.0` sur ce commit et le pousser.
+2. Confirmer que `yannick7fr/nginx-certbot-custom:X.Y.Z` n'existe pas.
+3. Créer une seule fois le tag Git annoté `vX.Y.Z` sur ce commit et le pousser.
 4. Le workflow `Publish immutable image` reconstruit et teste l'image sur un
    runner GitHub hébergé, recontrôle l'absence du tag distant, puis publie
-   uniquement `1.2.0`.
-5. Télécharger l'artefact `published-digest-1.2.0` ou lire le résumé du job.
+   uniquement `X.Y.Z`, avec cette version dans son label OCI.
+5. Télécharger l'artefact `published-digest-X.Y.Z` ou lire le résumé du job.
 6. Reporter ici et dans le README la référence complète :
    `yannick7fr/nginx-certbot-custom@sha256:<digest>`.
 
