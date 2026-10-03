@@ -21,6 +21,38 @@ silencieuse de `1.2.0`. Gitleaks reste bloquant.
 
 ## Vulnérabilités connues
 
+### Candidate Nginx 1.31.6
+
+Le scan local du 3 octobre 2026 utilise Trivy `0.74.0` et la base de
+vulnérabilités mise à jour le même jour à `01:08:10 UTC`. Il porte sur l'image
+`linux/amd64` construite avec la nouvelle base et le snapshot Debian du
+3 octobre 2026. Le build et tous les tests du README ont réussi.
+
+| Sévérité | Total | Correctif indiqué | Sans correctif indiqué |
+|---|---:|---:|---:|
+| Critique | 1 | 0 | 1 |
+| Haute | 81 | 6 | 75 |
+| Moyenne | 111 | 3 | 108 |
+| Faible | 96 | 0 | 96 |
+| Inconnue | 27 | 0 | 27 |
+
+L'occurrence critique concerne `libxml2` (`CVE-2026-6653`), sans correctif
+indiqué. Les occurrences hautes avec correctif concernent `msgpack`
+(`GHSA-6v7p-g79w-8964`, correctif `1.2.1`), `setuptools`
+(`CVE-2025-47273`, correctif `78.1.1`) et `urllib3`
+(`CVE-2026-97687` et `CVE-2026-97689`, correctif `2.8.0`). Les occurrences
+`urllib3` sont relevées dans deux chemins de l'image. Les versions Python
+figées sont conservées pour limiter cette mise à jour à la base et aux
+paquets Debian nécessaires ; ces correctifs restent à traiter séparément.
+
+Le scan des sources ne détecte aucun secret et retrouve les deux limites
+Dockerfile détaillées ci-dessous. Ces résultats sont informatifs selon la
+politique du dépôt. La base de vulnérabilités diffère de celle du relevé
+historique : les totaux ne constituent pas une comparaison à base constante.
+Les rapports de la CI font foi avant publication.
+
+### Version publiée 1.2.0 (Nginx 1.31.5)
+
 Le scan de référence effectué le 6 septembre 2026 avec Trivy `0.74.0` et sa
 base mise à jour donne les occurrences suivantes dans l'image candidate :
 
@@ -34,7 +66,7 @@ base mise à jour donne les occurrences suivantes dans l'image candidate :
 
 Les quatre occurrences critiques sans correctif concernent `perl-base`
 (`CVE-2026-13221`, `CVE-2026-42496`, `CVE-2026-8376`) et `libxml2`
-(`CVE-2026-6653`). La nouvelle image de base contient déjà les versions du
+(`CVE-2026-6653`). L’image de base de `1.2.0` contient déjà les versions du
 snapshot de sécurité final : l'étape `apt-get upgrade` ne trouve donc aucun
 paquet supplémentaire à mettre à jour. Par rapport au précédent candidat, le
 total haut passe de 84 à 68 et le total moyen de 104 à 99. Les deux occurrences

@@ -37,6 +37,15 @@ alias flottant. Sa concurrence est sérialisée. Si la version existe déjà, le
 job échoue avant l'authentification et il faut créer une nouvelle version : le
 tag Git et le tag Docker existants ne sont jamais déplacés ou écrasés.
 
+## Candidate Nginx 1.31.6
+
+La base `jonasal/nginx-certbot:6.2.0-nginx1.31.6` est figée au digest
+`sha256:ccd7b8b4fbb538a493012b52edfddeb51cbfec974ef7f8cd341894c5dae02925`.
+Le build et les tests locaux `linux/amd64` ont réussi le 3 octobre 2026.
+Cette candidate n’est pas publiée : choisir un nouveau tag `vX.Y.Z` après
+validation de la CI, puis suivre la procédure ci-dessus. Le digest historique
+de `1.2.0` reste celui de l’image publiée avec Nginx `1.31.5`.
+
 ## Digest 1.2.0
 
 État : publié.

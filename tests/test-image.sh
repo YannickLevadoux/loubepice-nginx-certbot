@@ -19,7 +19,7 @@ nginx_version=$(docker run --rm --platform linux/amd64 --entrypoint nginx \
   "$image_ref" -v 2>&1)
 certbot_version=$(docker run --rm --platform linux/amd64 --entrypoint certbot \
   "$image_ref" --version 2>&1)
-test "$nginx_version" = 'nginx version: nginx/1.31.5'
+test "$nginx_version" = 'nginx version: nginx/1.31.6'
 test "$certbot_version" = 'certbot 5.8.0'
 docker run --rm --platform linux/amd64 --entrypoint python3 \
   "$image_ref" -m pip check
@@ -41,9 +41,9 @@ base_digest_label=$(docker image inspect --format \
 test "$source_label" = 'https://github.com/YannickLevadoux/loubepice-nginx-certbot'
 test -n "$revision_label"
 test "$version_label" = "$expected_version"
-test "$base_name_label" = 'docker.io/jonasal/nginx-certbot:6.2.0-nginx1.31.5'
+test "$base_name_label" = 'docker.io/jonasal/nginx-certbot:6.2.0-nginx1.31.6'
 test "$base_digest_label" = \
-  'sha256:133f39cd8897f6987b56d1f6a182ec7ec4173490c10009a745a91dc94e0e9de4'
+  'sha256:ccd7b8b4fbb538a493012b52edfddeb51cbfec974ef7f8cd341894c5dae02925'
 
 openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
   -subj '/CN=localhost' \
