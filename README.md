@@ -9,17 +9,18 @@ ou droit de déploiement et ne contacte jamais la production.
 
 | Composant | Version | Vérification |
 |---|---:|---|
-| Image de base `jonasal/nginx-certbot` | `6.2.0-nginx1.31.5` (`linux/amd64`) | manifeste `sha256:133f39cd8897f6987b56d1f6a182ec7ec4173490c10009a745a91dc94e0e9de4` |
-| Nginx | `1.31.5` | archive SHA-256 `e951607d534836624bd36b6b45a71dbfb055237deae3738da6bbf3270dada279` |
+| Image de base `jonasal/nginx-certbot` | `6.2.0-nginx1.31.6` (`linux/amd64`) | manifeste `sha256:ccd7b8b4fbb538a493012b52edfddeb51cbfec974ef7f8cd341894c5dae02925` |
+| Nginx | `1.31.6` | archive SHA-256 `974ed5298a5e398e008704ed5db284e655fc270c596493dbccada452448fc9f1` |
 | headers-more | `0.40` | archive SHA-256 `c14cb5e6c998590c209efbf77bd7637ce2cab02332e4192756a8af5b26ba4284` |
 | Certbot | `5.8.0` | fourni par l'image de base figée |
 | pip / filelock / urllib3 | `26.2.1` / `3.32.5` / `2.7.0` | wheels PyPI figés et vérifiés par SHA-256 |
 | Python | `3.13` | fourni par l'image de base et corrigé depuis le snapshot Debian figé |
 
-La construction utilise le snapshot Debian immuable du 24 août 2026 pour
-les seuls outils du stage de compilation, puis celui du 5 septembre 2026 pour
-reproduire les mises à jour de sécurité de l'image finale. Les outils, les
-archives et les caches de compilation ne sont pas copiés dans l'image finale.
+La construction utilise le snapshot Debian immuable du 3 octobre 2026 pour
+les outils du stage de compilation et les mises à jour de sécurité de l'image
+finale. Ce snapshot fournit les paquets de développement compatibles avec
+la `libc6` de la nouvelle base. Les outils, les archives et les caches de
+compilation ne sont pas copiés dans l'image finale.
 
 ## Construire et tester localement
 
@@ -71,6 +72,18 @@ ne doivent jamais être ajoutées aux sources ou aux arguments de construction.
 
 Procédure détaillée : [docs/release.md](docs/release.md).
 
+## Mise à jour Nginx 1.31.6
+
+La base et les sources Nginx passent à `1.31.6`. Le module `headers-more`
+`0.40` est recompilé contre cette version ; Certbot et les dépendances Python
+figées restent aux versions indiquées ci-dessus. Cette mise à jour est une
+candidate locale : aucun nouveau tag ni digest publié ne lui est associé.
+
+Le 3 octobre 2026, le build `linux/amd64` et `tests/test-image.sh` ont réussi :
+versions et labels attendus, dépendances Python cohérentes, chargement du
+module, en-tête HTTP et probe HTTPS. Le scan Trivy relève 1 occurrence
+critique et 81 hautes ; voir [docs/security.md](docs/security.md) pour le détail.
+
 ## Digest publié
 
 `1.2.0`  
@@ -86,11 +99,11 @@ yannick7fr/nginx-certbot-custom@sha256:93de185acd7fdf6d1591a868579cfdb64a5393b22
 - le téléchargement Nginx passe de HTTP à HTTPS ;
 - le module est compilé comme module dynamique compatible, sans installer une
   seconde copie complète de Nginx ;
-- l'image de base passe à `jonasal/nginx-certbot:6.2.0-nginx1.31.5` et reste
+- l'image de base passe à `jonasal/nginx-certbot:6.2.0-nginx1.31.6` et reste
   figée par le manifeste propre à `linux/amd64` ;
-- `headers-more` passe à `0.40` et est recompilé contre Nginx `1.31.5` ;
+- `headers-more` passe à `0.40` et est recompilé contre Nginx `1.31.6` ;
 - l'`apt-get upgrade` non figé est remplacé par les mises à jour du snapshot
-  Debian immuable du 5 septembre 2026 ;
+  Debian immuable du 3 octobre 2026 ;
 - les mises à niveau `pip`, `filelock` et `urllib3` sont conservées mais leurs
   versions et hashes de wheels sont désormais figés ;
 - les outils, sources et caches de compilation restent dans le stage builder ;
