@@ -64,10 +64,11 @@ FROM jonasal/nginx-certbot:6.2.0-nginx1.31.5@sha256:133f39cd8897f6987b56d1f6a182
 ARG SOURCE_DATE_EPOCH
 ARG SOURCE_URL=https://github.com/YannickLevadoux/loubepice-nginx-certbot
 ARG SOURCE_REVISION=unknown
+ARG IMAGE_VERSION=dev
 
 LABEL org.opencontainers.image.title="Loub'Epice Nginx Certbot" \
       org.opencontainers.image.description="Nginx and Certbot with the headers-more dynamic module" \
-      org.opencontainers.image.version="1.2.0" \
+      org.opencontainers.image.version="${IMAGE_VERSION}" \
       org.opencontainers.image.source="${SOURCE_URL}" \
       org.opencontainers.image.revision="${SOURCE_REVISION}" \
       org.opencontainers.image.base.name="docker.io/jonasal/nginx-certbot:6.2.0-nginx1.31.5" \

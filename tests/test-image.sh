@@ -2,6 +2,7 @@
 set -euo pipefail
 
 image_ref=${1:-loubepice-nginx-certbot:test}
+expected_version=${2:-dev}
 repository_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 test_root=$(mktemp -d "${TMPDIR:-/tmp}/nginx-certbot-test.XXXXXX")
 container_name="loubepice-nginx-certbot-test-$$"
@@ -39,7 +40,7 @@ base_digest_label=$(docker image inspect --format \
   '{{ index .Config.Labels "org.opencontainers.image.base.digest" }}' "$image_ref")
 test "$source_label" = 'https://github.com/YannickLevadoux/loubepice-nginx-certbot'
 test -n "$revision_label"
-test "$version_label" = '1.2.0'
+test "$version_label" = "$expected_version"
 test "$base_name_label" = 'docker.io/jonasal/nginx-certbot:6.2.0-nginx1.31.5'
 test "$base_digest_label" = \
   'sha256:133f39cd8897f6987b56d1f6a182ec7ec4173490c10009a745a91dc94e0e9de4'
